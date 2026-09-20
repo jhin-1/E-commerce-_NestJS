@@ -35,4 +35,4 @@ import { Connection } from 'mongoose';
   providers: [AppService],
   exports: [],
 })
-export class AppModule { }
+export class AppModule {}

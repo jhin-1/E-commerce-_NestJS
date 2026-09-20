@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  ValidationPipe,
 } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
@@ -14,10 +15,10 @@ import { CustomValidationPipe } from '../../common/pipe/customvalidation.pipe.js
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
-  create(@Body(CustomValidationPipe) data: CreateUserDto) {
+  create(@Body(ValidationPipe) data: CreateUserDto) {
     return this.userService.create(data);
   }
 
