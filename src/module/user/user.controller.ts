@@ -15,7 +15,7 @@ import { CustomValidationPipe } from '../../common/pipe/customvalidation.pipe.js
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body(ValidationPipe) data: CreateUserDto) {
