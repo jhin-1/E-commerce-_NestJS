@@ -38,4 +38,4 @@ import { AuthModule } from './module/auth/auth.module.js';
   providers: [AppService],
   exports: [],
 })
-export class AppModule {}
+export class AppModule { }

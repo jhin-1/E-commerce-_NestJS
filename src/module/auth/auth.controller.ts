@@ -1,11 +1,7 @@
 import {
   Controller,
-  Get,
   Post,
   Body,
-  Patch,
-  Param,
-  Delete,
   ValidationPipe,
 } from '@nestjs/common';
 import { AuthService } from './auth.service.js';

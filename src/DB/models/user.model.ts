@@ -15,7 +15,14 @@ import {
 export type UserDocument = HydratedDocument<User>;
 
 @Schema({
-  toJSON: { virtuals: true },
+  toJSON: {
+    virtuals: true,
+    transform: (doc, ret: Record<string, any>) => {
+      delete ret.password; // 👈 مش هيطلع أي Error هنا خلاص
+      delete ret.__v;
+      return ret;
+    },
+  },
   toObject: { virtuals: true },
 })
 export class User {
@@ -25,7 +32,7 @@ export class User {
   @Prop({ type: String })
   lastName!: string;
 
-  @Prop({ type: String, required: true, unique: true })
+  @Prop({ type: String, required: true, unique: true, index: true })
   email!: string;
 
   @Prop({ type: String, required: true })
@@ -40,7 +47,7 @@ export class User {
   @Prop({
     type: String,
     required: true,
-    default: UserProvider.System,
+    default: UserProvider.SYSTEM,
     enum: UserProvider,
   })
   provider!: UserProvider;

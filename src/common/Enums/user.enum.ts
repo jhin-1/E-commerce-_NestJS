@@ -1,14 +1,14 @@
 export enum UserRole {
-  USER,
-  ADMIN,
+  USER = 'USER',
+  ADMIN = 'ADMIN',
 }
 
 export enum UserGender {
-  MALE,
-  FEMALE,
+  MALE = 'MALE',
+  FEMALE = 'FEMALE',
 }
 
 export enum UserProvider {
-  GOOGLE,
-  System,
+  SYSTEM = 'SYSTEM',
+  GOOGLE = 'GOOGLE',
 }
