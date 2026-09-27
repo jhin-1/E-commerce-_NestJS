@@ -9,5 +9,5 @@ import { Hashing } from '../../common/utils/security/hash.js';
   controllers: [AuthController],
   providers: [AuthService, Hashing],
 })
-export class AuthModule { }
+export class AuthModule {}
 //Hashing

@@ -52,8 +52,7 @@ import { GlobalExceptionFilter } from './common/Filters/http-exception.filter.js
       provide: APP_FILTER,
       useClass: GlobalExceptionFilter, // 👈 تشغيل الـ Filter عالمياً
     },
-
   ],
   exports: [],
 })
-export class AppModule { }
+export class AppModule {}

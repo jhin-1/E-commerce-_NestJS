@@ -2,7 +2,6 @@ import { IsEmail, IsEnum, IsNotEmpty, IsString } from 'class-validator';
 import { UserGender } from '../../../common/Enums/user.enum.js';
 
 export class SignupDto {
-
   @IsString()
   @IsNotEmpty()
   userName!: string;

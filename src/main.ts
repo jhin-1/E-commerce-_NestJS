@@ -7,11 +7,9 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     routeConflictPolicy: { duplicate: 'error', shadow: 'warn' }, // for duplicate routes
   });
-  let port = app.get(ConfigService).getOrThrow<number>('PORT')
+  let port = app.get(ConfigService).getOrThrow<number>('PORT');
   await app.listen(port || 3001, () =>
     console.log(`Server is running on port ${port || 3001}`),
-
   );
-
 }
 await bootstrap();

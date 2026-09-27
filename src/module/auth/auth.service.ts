@@ -8,12 +8,10 @@ import { Hashing } from '../../common/utils/security/hash.js';
 
 @Injectable()
 export class AuthService {
-
   constructor(
     @InjectModel(User.name) private readonly UserModel: Model<UserDocument>,
-    private readonly hash: Hashing
-  ) { }
-
+    private readonly hash: Hashing,
+  ) {}
 
   async signup(data: SignupDto): Promise<UserDocument> {
     let emailexsit = await this.UserModel.findOne({ email: data.email });
@@ -21,7 +19,6 @@ export class AuthService {
       throw new BadRequestException('This email Existed ');
     }
     data.password = await this.hash.hashtext(data.password);
-
 
     let NewUser = await this.UserModel.create(data);
     if (!NewUser) {
