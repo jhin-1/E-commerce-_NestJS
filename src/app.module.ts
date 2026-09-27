@@ -6,6 +6,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { AuthModule } from './module/auth/auth.module.js';
+import { TransformInterceptor } from './common/Interceptors/transform.interceptor.js';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -35,7 +37,13 @@ import { AuthModule } from './module/auth/auth.module.js';
     AuthModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor, // 👈 تشغيل الـ Interceptor عالمياً
+    },
+  ],
   exports: [],
 })
 export class AppModule { }
