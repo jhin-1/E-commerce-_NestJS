@@ -7,7 +7,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Connection } from 'mongoose';
 import { AuthModule } from './module/auth/auth.module.js';
 import { TransformInterceptor } from './common/Interceptors/transform.interceptor.js';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { GlobalExceptionFilter } from './common/Filters/http-exception.filter.js';
 
 @Module({
   imports: [
@@ -39,10 +40,19 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
   controllers: [AppController],
   providers: [
     AppService,
+
+    // Global Response
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformInterceptor, // 👈 تشغيل الـ Interceptor عالمياً
     },
+
+    // GlobalExceptionFilter
+    {
+      provide: APP_FILTER,
+      useClass: GlobalExceptionFilter, // 👈 تشغيل الـ Filter عالمياً
+    },
+
   ],
   exports: [],
 })
