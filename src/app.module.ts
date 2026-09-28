@@ -9,6 +9,7 @@ import { AuthModule } from './module/auth/auth.module.js';
 import { TransformInterceptor } from './common/Interceptors/transform.interceptor.js';
 import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
 import { GlobalExceptionFilter } from './common/Filters/http-exception.filter.js';
+import { RedisModule } from './common/services/redis/redis.module.js';
 
 @Module({
   imports: [
@@ -33,6 +34,8 @@ import { GlobalExceptionFilter } from './common/Filters/http-exception.filter.js
       }),
       inject: [ConfigService],
     }),
+    // -----------Redis DB ---------------------------
+    RedisModule,
     //----------- Modules ----------------
     UserModule,
     AuthModule,

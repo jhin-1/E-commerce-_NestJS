@@ -7,6 +7,7 @@ import { LoginDto } from './dto/login.dto.js';
 import { Hashing } from '../../common/utils/security/hash.js';
 import { MailService } from '../../common/services/email/email.service.js';
 
+let code: number = Number(Math.random().toFixed(5).split('.')[1]);
 @Injectable()
 export class AuthService {
   constructor(
@@ -29,7 +30,7 @@ export class AuthService {
     this.sendEmail.sendEmail({
       to: NewUser.email,
       subject: `Welcome to our app ${NewUser.userName}`,
-      html: `<p> Welcome Sir </p>`,
+      html: `<h1>Welcome ${NewUser.userName}</h1><p>Thank you for signing up to our social media app <h2>your verification code is ${code}</h2>. We are excited to have you on board!</p>`,
     });
     return NewUser;
   }
