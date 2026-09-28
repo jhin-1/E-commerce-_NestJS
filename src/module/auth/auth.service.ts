@@ -7,6 +7,7 @@ import { LoginDto } from './dto/login.dto.js';
 import { Hashing } from '../../common/utils/security/hash.js';
 import { MailService } from '../../common/services/email/email.service.js';
 import { RedisService } from '../../common/services/redis/redis.service.js';
+import { TokenService } from '../../common/services/token/token.service.js';
 
 let code: number = Number(Math.random().toFixed(5).split('.')[1]);
 @Injectable()
@@ -16,6 +17,7 @@ export class AuthService {
     private readonly hash: Hashing,
     private readonly EmailService: MailService,
     private readonly redisService: RedisService,
+    private readonly TokenService: TokenService,
   ) { }
 
   async signup(data: SignupDto): Promise<{ NewUser: UserDocument }> {
@@ -43,6 +45,17 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    return `This action returns all auth`;
+    let user = await this.UserModel.findOne({ email: data.email })
+    if (user) {
+      let ismatched = await this.hash.comparetext(data.password, user.password)
+      if (ismatched) {
+        let { accessToken, RefreshToken } = await this.TokenService.generateToken(user, 'localhost:3000')
+        return { user, accessToken, RefreshToken }
+      } else {
+        throw new BadRequestException("email or password not invalid")
+      }
+    }
+    throw new BadRequestException("user not found!")
+
   }
 }

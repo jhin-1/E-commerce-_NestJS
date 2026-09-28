@@ -5,14 +5,14 @@ import { LoginDto } from './dto/login.dto.js';
 
 @Controller('api/auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(private readonly authService: AuthService) { }
 
   @Post('signup')
   signup(@Body(ValidationPipe) signupDto: SignupDto) {
     return this.authService.signup(signupDto);
   }
 
-  @Post()
+  @Post('login')
   login(@Body(ValidationPipe) LoginDto: LoginDto) {
     return this.authService.login(LoginDto);
   }
