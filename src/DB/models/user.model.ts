@@ -63,6 +63,9 @@ export class User {
   @Prop({ type: String, required: true })
   password!: string;
 
+  @Prop({ type: Boolean, default: false })
+  IsVerified!: Boolean;
+
   @Virtual({
     set(this: User, value: any) {
       const [firstName, lastName] = value.split(' ');
