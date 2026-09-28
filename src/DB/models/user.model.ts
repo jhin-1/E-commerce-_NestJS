@@ -18,7 +18,7 @@ export type UserDocument = HydratedDocument<User>;
   toJSON: {
     virtuals: true,
     transform: (doc, ret: Record<string, any>) => {
-      delete ret.password; // 👈 مش هيطلع أي Error هنا خلاص
+      delete ret.password;
       delete ret.__v;
       return ret;
     },
