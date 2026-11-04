@@ -7,15 +7,22 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  UseGuards,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { CustomValidationPipe } from '../../common/pipe/customvalidation.pipe.js';
-
+import { AuthenticationGuard } from '../../common/guard/authentication.guard.js';
+import type { IAuthReq } from '../../common/Interfaces/auth.interface.js';
+import { Role } from '../../common/Decorator/role.decorator.js';
+import { UserRole } from '../../common/Enums/user.enum.js';
+import { AuthorizationGuard } from '../../common/guard/authorzation.guard.js';
+@Role([UserRole.ADMIN])
+@UseGuards(AuthenticationGuard, AuthorizationGuard)
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Post()
   create(@Body(ValidationPipe) data: CreateUserDto) {
@@ -23,13 +30,20 @@ export class UserController {
   }
 
   @Get()
-  findAll() {
-    return this.userService.findAll();
+  findAll(@Req() req: IAuthReq) {
+    console.log({
+      userID: req.credentials.userId,
+      DecodeDATA: req.credentials.decodeData,
+    });
+    return {
+      userID: req.credentials.userId,
+      DecodeDATA: req.credentials.decodeData,
+    };
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  @Get('getUser')
+  findOne(@Req() req: IAuthReq) {
+    return this.userService.findOne(req.credentials.userId);
   }
 
   @Patch(':id')
@@ -40,5 +54,15 @@ export class UserController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.userService.remove(+id);
+  }
+
+  @Get('profile')
+  profile(@Req() req: IAuthReq) {
+    return { message: "Done", data: req.credentials.user }
+  }
+
+  @Get('newprofile')
+  newprofile(@Req() req: IAuthReq) {
+    return { message: "Done", data: req.credentials.user }
   }
 }

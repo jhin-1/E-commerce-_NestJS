@@ -13,13 +13,10 @@ import { AuthenticationMiddelware } from '../../common/middelware/authentication
   providers: [AuthService, Hashing, MailService, TokenService],
 })
 export class AuthModule {
-
   configure(consumer: MiddlewareConsumer) {
-
-    consumer
-      .apply(AuthenticationMiddelware)
-      .forRoutes({
-        path: "auth/*", method: RequestMethod.ALL
-      })
+    consumer.apply(AuthenticationMiddelware).forRoutes({
+      path: 'auth/*',
+      method: RequestMethod.ALL,
+    });
   }
 }

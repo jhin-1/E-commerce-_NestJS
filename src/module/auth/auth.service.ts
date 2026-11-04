@@ -18,7 +18,7 @@ export class AuthService {
     private readonly EmailService: MailService,
     private readonly redisService: RedisService,
     private readonly TokenService: TokenService,
-  ) { }
+  ) {}
 
   async signup(data: SignupDto): Promise<{ NewUser: UserDocument }> {
     let emailexsit = await this.UserModel.findOne({ email: data.email });
@@ -45,17 +45,17 @@ export class AuthService {
   }
 
   async login(data: LoginDto) {
-    let user = await this.UserModel.findOne({ email: data.email })
+    let user = await this.UserModel.findOne({ email: data.email });
     if (user) {
-      let ismatched = await this.hash.comparetext(data.password, user.password)
+      let ismatched = await this.hash.comparetext(data.password, user.password);
       if (ismatched) {
-        let { accessToken, RefreshToken } = await this.TokenService.generateToken(user, 'localhost:3000')
-        return { user, accessToken, RefreshToken }
+        let { accessToken, RefreshToken } =
+          await this.TokenService.generateToken(user, 'localhost:3000');
+        return { user, accessToken, RefreshToken };
       } else {
-        throw new BadRequestException("email or password not invalid")
+        throw new BadRequestException('email or password not invalid');
       }
     }
-    throw new BadRequestException("user not found!")
-
+    throw new BadRequestException('user not found!');
   }
 }
