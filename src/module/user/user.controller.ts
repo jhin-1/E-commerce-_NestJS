@@ -7,19 +7,16 @@ import {
   Param,
   Delete,
   ValidationPipe,
-  UseGuards,
   Req,
 } from '@nestjs/common';
 import { UserService } from './user.service.js';
 import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
-import { AuthenticationGuard } from '../../common/guard/authentication.guard.js';
 import type { IAuthReq } from '../../common/Interfaces/auth.interface.js';
-import { Role } from '../../common/Decorator/role.decorator.js';
 import { UserRole } from '../../common/Enums/user.enum.js';
-import { AuthorizationGuard } from '../../common/guard/authorzation.guard.js';
-@Role([UserRole.ADMIN])
-@UseGuards(AuthenticationGuard, AuthorizationGuard)
+import { auth } from '../../common/Decorator/index.js';
+
+@auth([UserRole.ADMIN])
 @Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) { }
