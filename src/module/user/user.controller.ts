@@ -14,12 +14,13 @@ import { CreateUserDto } from './dto/create-user.dto.js';
 import { UpdateUserDto } from './dto/update-user.dto.js';
 import type { IAuthReq } from '../../common/Interfaces/auth.interface.js';
 import { UserRole } from '../../common/Enums/user.enum.js';
-import { auth } from '../../common/Decorator/index.js';
+import { auth, User } from '../../common/Decorator/index.js';
+import type { UserDocument } from '../../DB/index.js';
 
 @auth([UserRole.ADMIN])
 @Controller('users')
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Post()
   create(@Body(ValidationPipe) data: CreateUserDto) {
@@ -55,11 +56,11 @@ export class UserController {
 
   @Get('profile')
   profile(@Req() req: IAuthReq) {
-    return { message: "Done", data: req.credentials.user }
+    return { message: 'Done', data: req.credentials.user };
   }
 
   @Get('newprofile')
-  newprofile(@Req() req: IAuthReq) {
-    return { message: "Done", data: req.credentials.user }
+  newprofile(@User() user: UserDocument) {
+    return { message: 'Done', data: user };
   }
 }

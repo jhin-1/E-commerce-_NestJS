@@ -16,9 +16,7 @@ import { User, UserDocument } from '../../DB/index.js';
 
 @Injectable()
 export class AuthorizationGuard implements CanActivate {
-  constructor(
-    private readonly reflector: Reflector,
-  ) { }
+  constructor(private readonly reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const roles = this.reflector.getAllAndOverride<UserRole[]>(roleName, [
@@ -34,7 +32,8 @@ export class AuthorizationGuard implements CanActivate {
 
     switch (context.getType()) {
       case 'http':
-        user = (context.switchToHttp().getRequest() as IAuthReq).credentials?.user;
+        user = (context.switchToHttp().getRequest() as IAuthReq).credentials
+          ?.user;
         break;
 
       default:
@@ -42,13 +41,14 @@ export class AuthorizationGuard implements CanActivate {
     }
 
     if (!user) {
-      throw new ForbiddenException('Access denied: {User} credentials not found');
+      throw new ForbiddenException(
+        'Access denied: {User} credentials not found',
+      );
     }
 
     if (!roles.includes(user.role)) {
-      throw new ForbiddenException(" cannot access this! ")
+      throw new ForbiddenException(' cannot access this! ');
     }
     return true;
   }
-
 }

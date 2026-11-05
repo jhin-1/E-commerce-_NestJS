@@ -7,7 +7,7 @@ export interface IAuthReq extends Request {
   credentials: {
     decodeData: JwtPayload;
     userId: string | Types.ObjectId;
-    user?: UserDocument;
+    user: UserDocument;
   };
-  user?: UserDocument;
+  user: UserDocument;
 }

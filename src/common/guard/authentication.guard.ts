@@ -17,7 +17,7 @@ export class AuthenticationGuard implements CanActivate {
   constructor(
     private readonly tokenService: TokenService,
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-  ) { }
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     let req!: IAuthReq;
@@ -44,7 +44,9 @@ export class AuthenticationGuard implements CanActivate {
     const [flag, token] = authorzation?.split(' ') || [];
     console.log('form guard', { flag, token });
     if (!flag || !token) {
-      throw new UnauthorizedException('Missing or invalid Authorization header');
+      throw new UnauthorizedException(
+        'Missing or invalid Authorization header',
+      );
     }
     switch (flag) {
       case 'Basic':
