@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { SignupDto } from './dto/signup.dto.js';
 import { User, UserDocument } from '../../DB/index.js';
 import { Model } from 'mongoose';
@@ -8,6 +12,7 @@ import { Hashing } from '../../common/utils/security/hash.js';
 import { MailService } from '../../common/services/email/email.service.js';
 import { RedisService } from '../../common/services/redis/redis.service.js';
 import { TokenService } from '../../common/services/token/token.service.js';
+import { ForgetPassWordDtoStpeOne, ForgetPassWordDtoStpeTwo } from './dto/forgetpassword.dto.js';
 
 let code: number = Number(Math.random().toFixed(5).split('.')[1]);
 @Injectable()
@@ -18,7 +23,7 @@ export class AuthService {
     private readonly EmailService: MailService,
     private readonly redisService: RedisService,
     private readonly TokenService: TokenService,
-  ) {}
+  ) { }
 
   async signup(data: SignupDto): Promise<{ NewUser: UserDocument }> {
     let emailexsit = await this.UserModel.findOne({ email: data.email });
@@ -57,5 +62,44 @@ export class AuthService {
       }
     }
     throw new BadRequestException('user not found!');
+  }
+
+  async forgetpasswordStpeOne(data: ForgetPassWordDtoStpeOne) {
+    let { email } = data;
+    let userExist = await this.UserModel.findOne({ email });
+    if (!userExist) {
+      throw new NotFoundException(' This email Not Found!');
+    }
+    this.redisService.set({
+      key: `OTP::${userExist._id}`,
+      value: code,
+      ttl: 60 * 5,
+    });
+    this.EmailService.sendEmail({
+      to: userExist.email,
+      subject: `forgetpassword step one  ${userExist.userName}`,
+      html: `<h1> Hello your code is ${code} for reset your password ${userExist.userName} </h1> `,
+    });
+    return {
+      message: `please check your email to reset your password  ${code}`,
+    };
+  }
+
+  async forgetpasswordStpeTwo(data: ForgetPassWordDtoStpeTwo, userId: string) {
+    let { code, newPassword } = data;
+    let user = await this.UserModel.findById(userId);
+    if (!user) {
+      throw new NotFoundException("user not exist!")
+    }
+    let hasotp = await this.redisService.get(`OTP::${user._id}`);
+    if (code != hasotp) {
+      throw new BadRequestException("otp not valid")
+    }
+    user.password = await this.hash.hashtext(newPassword);
+    await user.save();
+    return {
+      message: "password reset successfully",
+    };
+
   }
 }

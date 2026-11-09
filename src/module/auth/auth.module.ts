@@ -8,9 +8,10 @@ import { TokenService } from '../../common/services/token/token.service.js';
 import { AuthenticationMiddelware } from '../../common/middelware/authentication.middelware.js';
 
 @Module({
-  imports: [UserModel],
+  imports: [UserModel], // انا متحاج خدمات منmodule تاني 
   controllers: [AuthController],
-  providers: [AuthService, Hashing, MailService, TokenService],
+  providers: [AuthService, Hashing, MailService, TokenService], // انا بقدم خدمات 
+  exports: [] // انا بسمح لغيري باستخدام خدماتي 
 })
 export class AuthModule {
   configure(consumer: MiddlewareConsumer) {
